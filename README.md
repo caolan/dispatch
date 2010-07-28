@@ -18,7 +18,7 @@ regular expressions for matching URLs and calling an associated function.
             '/user/posts': function(req, res){
                 ...
             },
-            '/user/posts/(\w+)': function(req, res, post){
+            '/user/posts/(\\w+)': function(req, res, post){
                 ...
             }
         })
@@ -37,7 +37,7 @@ you see fit:
             '/user': {
                 '/': function(req, res){ ...  },
                 '/posts': function(req, res){ ...  },
-                '/posts/(\w+)': function(req, res, post){ ...  }
+                '/posts/(\\w+)': function(req, res, post){ ...  }
             }
         })
     );
