@@ -1,0 +1,16 @@
+{ "name": "dispatch"
+, "description": "A regular expression URL dispatcher for Connect"
+, "main": "./index"
+, "author": "Caolan McMahon"
+, "version": "0.0.1"
+, "repository" :
+  { "type" : "git"
+  , "url" : "http://github.com/caolan/dispatch.git"
+  }
+, "bugs" : { "web" : "http://github.com/caolan/dispatch/issues" }
+, "licenses" :
+  [ { "type" : "MIT"
+    , "url" : "http://github.com/caolan/dispatch/raw/master/LICENSE"
+    }
+  ]
+}
