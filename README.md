@@ -1,5 +1,11 @@
 # Dispatch
 
+## Fork Changes ##
+
+This fork of dispatch has been changed to pass through the _next_ function as the third parameter, pushing matched groups from the route to starting at the fourth param.
+
+## End Fork Changes ##
+
 A really simple URL dispatcher for
 [Connect](http://github.com/senchalabs/connect). Allows arbitrarily nested
 regular expressions for matching URLs and calling an associated function.
@@ -18,7 +24,7 @@ regular expressions for matching URLs and calling an associated function.
             '/user/posts': function(req, res){
                 ...
             },
-            '/user/posts/(\\w+)': function(req, res, post){
+            '/user/posts/(\\w+)': function(req, res, next, post){
                 ...
             }
         })
@@ -37,7 +43,7 @@ you see fit:
             '/user': {
                 '/': function(req, res){ ...  },
                 '/posts': function(req, res){ ...  },
-                '/posts/(\\w+)': function(req, res, post){ ...  }
+                '/posts/(\\w+)': function(req, res, next, post){ ...  }
             }
         })
     );

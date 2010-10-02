@@ -1,12 +1,13 @@
 var dispatch = require('dispatch');
 
 exports['simple match'] = function(test){
-    test.expect(2);
+    test.expect(3);
     var request = {url: '/test'};
     dispatch({
-        '/test': function(req, res){
+        '/test': function(req, res, next){
             test.equals(req, request);
             test.equals(res, 'response');
+            test.equals(next, 'next');
             test.done();
         }
     })(request, 'response', 'next');
@@ -27,9 +28,10 @@ exports['no match'] = function(test){
 exports['regexp match'] = function(test){
     var request = {url: '/abc/test123'};
     dispatch({
-        '/(\\w+)/test\\d*': function(req, res, group){
+        '/(\\w+)/test\\d*': function(req, res, next, group){
             test.equals(req, request);
             test.equals(res, 'response');
+            test.equals(next, 'next');
             test.equals(group, 'abc');
             test.done();
         }
@@ -37,12 +39,13 @@ exports['regexp match'] = function(test){
 };
 
 exports['multiple matches'] = function(test){
-    test.expect(3);
+    test.expect(4);
     var request = {url: '/abc'};
     dispatch({
-        '/(\\w+)/?': function(req, res, group){
+        '/(\\w+)/?': function(req, res, next, group){
             test.equals(req, request);
             test.equals(res, 'response');
+            test.equals(next, 'next');
             test.equals(group, 'abc');
         },
         '/(\\w+)': function(req, res, group){
@@ -57,9 +60,10 @@ exports['nested urls'] = function(test){
     dispatch({
         '/folder': {
             '/some/other': {
-                '/path': function(req, res){
+                '/path': function(req, res, next){
                     test.equals(req, request);
                     test.equals(res, 'response');
+                    test.equals(next, 'next');
                     test.done();
                 }
             }
@@ -72,9 +76,10 @@ exports['nested urls with captured groups'] = function(test){
     dispatch({
         '/(\\w+)': {
             '/(\\w+)': {
-                '/(\\w+)': function(req, res, group1, group2, group3){
+                '/(\\w+)': function(req, res, next, group1, group2, group3){
                     test.equals(req, request);
                     test.equals(res, 'response');
+                    test.equals(next, 'next');
                     test.equals(group1, 'one');
                     test.equals(group2, 'two');
                     test.equals(group3, 'three');
