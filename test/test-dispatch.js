@@ -102,5 +102,16 @@ exports['passed condition'] = function(test){
             test.ok(true);
             test.done();
         }
-    }, function(req){require('sys').puts(req.name == 'pass');return req.name == 'pass';})(request, 'response', 'next');
+    }, function(req){return req.name == 'pass';})(request, 'response', 'next');
+};
+
+exports['failed condition'] = function(test){
+    test.expect(0);
+    var request = {url: '/test', name:'fail'};
+    dispatch({
+        '/test': function(req, res, next){
+            test.ok(true);
+            test.done();
+        }
+    }, function(req){return req.name == 'pass';})(request, 'response', function(){test.done()});
 };
