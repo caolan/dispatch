@@ -93,3 +93,14 @@ exports['nested urls with captured groups'] = function(test){
         }
     })(request, 'response', 'next');
 };
+
+exports['passed condition'] = function(test){
+    test.expect(1);
+    var request = {url: '/test', name:'pass'};
+    dispatch({
+        '/test': function(req, res, next){
+            test.ok(true);
+            test.done();
+        }
+    }, function(req){require('sys').puts(req.name == 'pass');return req.name == 'pass';})(request, 'response', 'next');
+};

@@ -4,6 +4,8 @@
 
 This fork of dispatch has been changed to pass through the _next_ function as the third parameter, pushing matched groups from the route to starting at the fourth param.
 
+A second, optional parameter has been added to dispatch(). _condition_ is a function of the form function(res){}. It is executed if a routing match is found. If it is present and returns true, then the dispatch action is performed. If it is present and returns false no dispatch action is performed.
+
 ## End Fork Changes ##
 
 A really simple URL dispatcher for
