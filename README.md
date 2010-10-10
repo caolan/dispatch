@@ -76,7 +76,7 @@ prototyping and just getting my ideas down in code:
         dispatch = require('dispatch');
 
     var server = Connect.createServer(
-        quip.filter(),
+        quip(),
         dispatch({
             '/': function(req, res){
                 res.text('hello world!');
