@@ -102,7 +102,13 @@ exports['passed condition'] = function(test){
             test.ok(true);
             test.done();
         }
-    }, function(req){return req.name == 'pass';})(request, 'response', 'next');
+    }, 
+    function(req){return req.name == 'pass';},
+    function(req, res, next){
+      test.ok(false);
+      test.done();
+    }
+    )(request, 'response', 'next');
 };
 
 exports['failed condition'] = function(test){
@@ -110,7 +116,7 @@ exports['failed condition'] = function(test){
     var request = {url: '/test', name:'fail'};
     dispatch({
         '/test': function(req, res, next){
-            test.ok(true);
+            test.ok(false);
             test.done();
         }
       }, 
@@ -125,13 +131,13 @@ exports['condition but no match'] = function(test){
     var request = {url: '/nomatch', name:'fail'};
     dispatch({
         '/test': function(req, res, next){
-            test.ok(true);
+            test.ok(false);
             test.done();
         }
       }, 
       function(req){return req.name == 'pass';},
       function(){
-        test.ok(true);
+        test.ok(false);
         test.done();
       }
     )(request, 'response', function(req,res,next) {
