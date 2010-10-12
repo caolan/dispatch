@@ -113,5 +113,28 @@ exports['failed condition'] = function(test){
             test.ok(true);
             test.done();
         }
-    }, function(req){return req.name == 'pass';})(request, 'response', function(){test.done()});
+      }, 
+      function(req){return req.name == 'pass';},
+      function(){test.done()}
+    )(request, 'response');
+};
+
+
+exports['condition but no match'] = function(test){
+    test.expect(0);
+    var request = {url: '/nomatch', name:'fail'};
+    dispatch({
+        '/test': function(req, res, next){
+            test.ok(true);
+            test.done();
+        }
+      }, 
+      function(req){return req.name == 'pass';},
+      function(){
+        test.ok(true);
+        test.done();
+      }
+    )(request, 'response', function(req,res,next) {
+      test.done();
+    });
 };
