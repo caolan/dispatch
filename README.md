@@ -50,14 +50,28 @@ Let's assume that 'user' is actually provided by another module:
 
     Connect.createServer(
         dispatch({
-            '/about': function(req, res){ ...  },
+            '/about': function(req, res){ ... },
             '/user': require('./user').urls
         })
     );
 
 Easy! A really lightweight and flexible URL dispatcher that just does the
-obvious. And when I say lightweight, it currently clocks in at about 26 lines
-of actual JavaScript ;)
+obvious.
+
+Its also possible to define methods for URLs:
+
+    Connect.createServer(
+        dispatch({
+            '/user': {
+                'GET /item': function(req, res){ ... },
+                'POST /item': function(req, res){ ... },
+            }
+        })
+    );
+
+Just prefix the URL with the http method in uppercase followed by whitespace
+and then the path you want to match against. Nested URLs always match the last
+method defined in the tree.
 
 A couple of implementation points:
 
