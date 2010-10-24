@@ -1,12 +1,13 @@
 var dispatch = require('dispatch');
 
 exports['simple match'] = function(test){
-    test.expect(2);
+    test.expect(3);
     var request = {url: '/test', method: 'GET'};
     dispatch({
-        '/test': function(req, res){
+        '/test': function(req, res, next){
             test.equals(req, request);
             test.equals(res, 'response');
+            test.equals(next, 'next');
             test.done();
         }
     })(request, 'response', 'next');
@@ -15,7 +16,7 @@ exports['simple match'] = function(test){
 exports['no match'] = function(test){
     var request = {url: '/abc', method: 'XYZ'};
     dispatch({
-        '/test': function(req, res){
+        '/test': function(req, res, next){
             test.ok(false, 'should not be called');
         }
     })(request, 'response', function(){
@@ -27,9 +28,10 @@ exports['no match'] = function(test){
 exports['regexp match'] = function(test){
     var request = {url: '/abc/test123'};
     dispatch({
-        '/(\\w+)/test\\d*': function(req, res, group){
+        '/(\\w+)/test\\d*': function(req, res, next, group){
             test.equals(req, request);
             test.equals(res, 'response');
+            test.equals(next, 'next');
             test.equals(group, 'abc');
             test.done();
         }
@@ -37,15 +39,16 @@ exports['regexp match'] = function(test){
 };
 
 exports['multiple matches'] = function(test){
-    test.expect(3);
+    test.expect(4);
     var request = {url: '/abc', method: 'POST'};
     dispatch({
-        '/(\\w+)/?': function(req, res, group){
+        '/(\\w+)/?': function(req, res, next, group){
             test.equals(req, request);
             test.equals(res, 'response');
+            test.equals(next, 'next');
             test.equals(group, 'abc');
         },
-        '/(\\w+)': function(req, res, group){
+        '/(\\w+)': function(req, res, next, group){
             test.ok(false, 'only first match should be called');
         }
     })(request, 'response', 'next');
@@ -57,9 +60,10 @@ exports['nested urls'] = function(test){
     dispatch({
         '/folder': {
             '/some/other': {
-                '/path': function(req, res){
+                '/path': function(req, res, next){
                     test.equals(req, request);
                     test.equals(res, 'response');
+                    test.equals(next, 'next');
                     test.done();
                 }
             }
@@ -72,9 +76,10 @@ exports['nested urls with captured groups'] = function(test){
     dispatch({
         '/(\\w+)': {
             '/(\\w+)': {
-                '/(\\w+)': function(req, res, group1, group2, group3){
+                '/(\\w+)': function(req, res, next, group1, group2, group3){
                     test.equals(req, request);
                     test.equals(res, 'response');
+                    test.equals(next, 'next');
                     test.equals(group1, 'one');
                     test.equals(group2, 'two');
                     test.equals(group3, 'three');
@@ -82,7 +87,7 @@ exports['nested urls with captured groups'] = function(test){
                 }
             }
         },
-        '/one/two/three': function(req, res){
+        '/one/two/three': function(req, res, next){
             test.ok(false, 'should not be called, previous key matches');
             test.done();
         }
@@ -94,12 +99,12 @@ exports['method'] = function (test) {
     var call_order = [];
     var request = {url: '/test', method: 'GET'};
     var handle_req = dispatch({
-        'GET /test': function(req, res){
+        'GET /test': function(req, res, next){
             call_order.push('GET');
             test.equals(req, request);
             test.equals(res, 'response');
         },
-        'POST /test': function(req, res){
+        'POST /test': function(req, res, next){
             call_order.push('POST');
             test.equals(req, request);
             test.equals(res, 'response');
@@ -121,7 +126,7 @@ exports['nested method'] = function (test) {
     var request = {url: '/path/test', method: 'GET'};
     var handle_req = dispatch({
         '/path': {
-            'GET /test': function(req, res){
+            'GET /test': function(req, res, next){
                 test.equals(req, request);
                 test.equals(res, 'response');
             }
@@ -143,7 +148,7 @@ exports['nested already defined method'] = function (test) {
     var handle_req = dispatch({
         '/path': {
             'POST /create': {
-                '/item': function(req, res){
+                '/item': function(req, res, next){
                     test.equals(req, request);
                     test.equals(res, 'response');
                 }
@@ -166,7 +171,7 @@ exports['nested redefine previous method'] = function (test) {
     var handle_req = dispatch({
         '/path': {
             'POST /create': {
-                'GET /item': function(req, res){
+                'GET /item': function(req, res, next){
                     test.equals(req, request);
                     test.equals(res, 'response');
                 }
@@ -183,17 +188,19 @@ exports['nested redefine previous method'] = function (test) {
 };
 
 exports['whitespace between method and pattern'] = function (test) {
-    test.expect(4);
+    test.expect(6);
     var call_order = [];
     var request = {url: '/test', method: 'GET'};
     var handle_req = dispatch({
-        'GET    /test': function(req, res){
+        'GET    /test': function(req, res, next){
             test.equals(req, request);
             test.equals(res, 'response');
+            test.equals(next, 'next');
         },
-        'POST\t/test': function(req, res){
+        'POST\t/test': function(req, res, next){
             test.equals(req, request);
             test.equals(res, 'response');
+            test.equals(next, 'next');
         }
     });
     handle_req(request, 'response', 'next');

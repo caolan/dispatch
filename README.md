@@ -9,16 +9,16 @@ regular expressions for matching URLs and calling an associated function.
 
     Connect.createServer(
         dispatch({
-            '/about': function(req, res){
+            '/about': function(req, res, next){
                 ...
             },
-            '/user': function(req, res){
+            '/user': function(req, res, next){
                 ...
             },
-            '/user/posts': function(req, res){
+            '/user/posts': function(req, res, next){
                 ...
             },
-            '/user/posts/(\\w+)': function(req, res, post){
+            '/user/posts/(\\w+)': function(req, res, next, post){
                 ...
             }
         })
@@ -33,11 +33,11 @@ you see fit:
 
     Connect.createServer(
         dispatch({
-            '/about': function(req, res){ ...  },
+            '/about': function(req, res, next){ ...  },
             '/user': {
-                '/': function(req, res){ ...  },
-                '/posts': function(req, res){ ...  },
-                '/posts/(\\w+)': function(req, res, post){ ...  }
+                '/': function(req, res, next){ ...  },
+                '/posts': function(req, res, next){ ...  },
+                '/posts/(\\w+)': function(req, res, next, post){ ...  }
             }
         })
     );
@@ -50,7 +50,7 @@ Let's assume that 'user' is actually provided by another module:
 
     Connect.createServer(
         dispatch({
-            '/about': function(req, res){ ... },
+            '/about': function(req, res, next){ ... },
             '/user': require('./user').urls
         })
     );
@@ -63,8 +63,8 @@ Its also possible to define methods for URLs:
     Connect.createServer(
         dispatch({
             '/user': {
-                'GET /item': function(req, res){ ... },
-                'POST /item': function(req, res){ ... },
+                'GET /item': function(req, res, next){ ... },
+                'POST /item': function(req, res, next){ ... },
             }
         })
     );
@@ -92,10 +92,10 @@ prototyping and just getting my ideas down in code:
     var server = Connect.createServer(
         quip(),
         dispatch({
-            '/': function(req, res){
+            '/': function(req, res, next){
                 res.text('hello world!');
             },
-            '/api': function(req, res){
+            '/api': function(req, res, next){
                 res.json({hello: 'world'});
             }
         })
