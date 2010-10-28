@@ -1,4 +1,4 @@
-var dispatch = require('dispatch');
+var dispatch = require('../lib/dispatch');
 
 exports['simple match'] = function(test){
     test.expect(3);
@@ -207,4 +207,32 @@ exports['whitespace between method and pattern'] = function (test) {
     request.method = 'POST';
     handle_req(request, 'response', 'next');
     test.done();
+};
+
+exports['named param'] = function (test) {
+    var request = {url: '/abc/test123'};
+    dispatch({
+        '/:name/test\\d{3}': function(req, res, next, name){
+            test.equals(req, request);
+            test.equals(res, 'response');
+            test.equals(next, 'next');
+            test.equals(name, 'abc');
+            test.done();
+        }
+    })(request, 'response', 'next');
+};
+
+exports['nested named param'] = function (test) {
+    var request = {url: '/test/123'};
+    dispatch({
+        '/test': {
+            '/:param': function(req, res, next, name){
+                test.equals(req, request);
+                test.equals(res, 'response');
+                test.equals(next, 'next');
+                test.equals(name, '123');
+                test.done();
+            }
+        }
+    })(request, 'response', 'next');
 };

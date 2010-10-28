@@ -12,7 +12,7 @@ regular expressions for matching URLs and calling an associated function.
             '/about': function(req, res, next){
                 ...
             },
-            '/user': function(req, res, next){
+            '/user/:id': function(req, res, next, id){
                 ...
             },
             '/user/posts': function(req, res, next){
@@ -27,6 +27,10 @@ regular expressions for matching URLs and calling an associated function.
 Dispatch can be used with a straight-forward object literal containing view
 functions keyed by URL. As you can see from the last URL in the list, captured
 groups are passed to the matching function as an argument.
+
+You can also use :named parameters in a URL, which is just a more readable way
+of capturing ([^\/]+). Named parameters are passed to the matched function in
+the same way as normal regular expression groups.
 
 So far so predictable. However, it is also possible to nest these objects as
 you see fit:
