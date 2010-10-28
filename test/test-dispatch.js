@@ -236,3 +236,25 @@ exports['nested named param'] = function (test) {
         }
     })(request, 'response', 'next');
 };
+
+exports['method as final object'] = function (test) {
+    var request = {url: '/test/etc', method: 'POST'};
+    dispatch({
+        '/test': {
+            GET: function(req, res, next){
+                test.ok(false, 'GET should not be called');
+            },
+            '/etc': {
+                GET: function(req, res, next){
+                    test.ok(false, 'GET should not be called');
+                },
+                POST: function(req, res, next){
+                    test.equals(req, request);
+                    test.equals(res, 'response');
+                    test.equals(next, 'next');
+                    test.done();
+                },
+            }
+        }
+    })(request, 'response', 'next');
+};

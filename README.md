@@ -75,7 +75,19 @@ Its also possible to define methods for URLs:
 
 Just prefix the URL with the http method in uppercase followed by whitespace
 and then the path you want to match against. Nested URLs always match the last
-method defined in the tree.
+method defined in the tree. Because of this, you can use the following style for
+matching request methods, if you prefer:
+
+    dispatch({
+        '/test': {
+            GET: function (req, res, next) {
+                ...
+            },
+            POST: function (req, res, next) {
+                ...
+            }
+        }
+    })
 
 A couple of implementation points:
 
