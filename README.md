@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/caolan/dispatch.png)](http://travis-ci.org/caolan/dispatch)
 # Dispatch
 
 A really simple URL dispatcher for
