@@ -258,3 +258,17 @@ exports['method as final object'] = function (test) {
         }
     })(request, 'response', 'next');
 };
+
+exports['without next function - eg, vanilla http servers'] = function (test) {
+    var request = {url: '/test/123'};
+    dispatch({
+        '/test': {
+            '/:param': function(req, res, name){
+                test.equals(req, request);
+                test.equals(res, 'response');
+                test.equals(name, '123');
+                test.done();
+            }
+        }
+    })(request, 'response');
+};
