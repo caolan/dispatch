@@ -272,3 +272,16 @@ exports['without next function - eg, vanilla http servers'] = function (test) {
         }
     })(request, 'response');
 };
+
+exports['with named param at end'] = function (test) {
+    var request = {url: '/tests/123', method: 'GET'};
+    dispatch({
+        'GET /tests/:x': function(req, res, x){
+            test.equals(req, request);
+            test.equals(res, 'response');
+            test.equals(x, '123');
+            test.done();
+        }
+    })(request, 'response');
+};
+
