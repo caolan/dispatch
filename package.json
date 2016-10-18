@@ -3,7 +3,7 @@
   "description": "A regular expression URL dispatcher for Connect",
   "main": "./lib/dispatch",
   "author": "Caolan McMahon",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "repository": {
     "type": "git",
     "url": "http://github.com/caolan/dispatch.git"
