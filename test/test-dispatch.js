@@ -285,3 +285,26 @@ exports['with named param at end'] = function (test) {
     })(request, 'response');
 };
 
+exports['regexp with pipe'] = function (test) {
+    test.expect(2);
+    var requestFactory = function(url){ return {url: url, method: 'GET'}; };
+    var called = function(req, res){
+        test.ok(true);
+    };
+    var notCalled = function(req, res){
+        test.ok(false, 'should not be called');
+    };
+    dispatch({
+      '/x|/y': called
+    })(requestFactory('/x'), 'response');
+    dispatch({
+      '/x|/y': called
+    })(requestFactory('/y'), 'response');
+    dispatch({
+      '/x|/y': notCalled
+    })(requestFactory('/xx'), 'response');
+    dispatch({
+      '/x|/y': notCalled
+    })(requestFactory('/yy'), 'response');
+    test.done();
+};
