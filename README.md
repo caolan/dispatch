@@ -11,16 +11,16 @@ var Connect = require('connect'),
 
 Connect.createServer(
     dispatch({
-        '/about': function(req, res, next){
+        '/about': function(req, res, next, queryParams){
             ...
         },
-        '/user/:id': function(req, res, next, id){
+        '/user/:id': function(req, res, next, id, queryParams){
             ...
         },
-        '/user/posts': function(req, res, next){
+        '/user/posts': function(req, res, next, queryParams){
             ...
         },
-        '/user/posts/(\\w+)': function(req, res, next, post){
+        '/user/posts/(\\w+)': function(req, res, next, post, queryParams){
             ...
         }
     })
@@ -34,10 +34,10 @@ var http = require('http');
 
 var server = http.createServer(
     dispatch({
-        '/about': function(req, res){
+        '/about': function(req, res, queryParams){
             ...
         },
-        '/user/:id': function(req, res, id){
+        '/user/:id': function(req, res, id, queryParams){
             ...
         }
     })
@@ -60,11 +60,11 @@ you see fit:
 ```js
 Connect.createServer(
     dispatch({
-        '/about': function(req, res, next){ ...  },
+        '/about': function(req, res, next, queryParams){ ...  },
         '/user': {
-            '/': function(req, res, next){ ...  },
-            '/posts': function(req, res, next){ ...  },
-            '/posts/(\\w+)': function(req, res, next, post){ ...  }
+            '/': function(req, res, next, queryParams){ ...  },
+            '/posts': function(req, res, next, queryParams){ ...  },
+            '/posts/(\\w+)': function(req, res, next, post, queryParams){ ...  }
         }
     })
 );
@@ -79,7 +79,7 @@ Let's assume that 'user' is actually provided by another module:
 ```js
 Connect.createServer(
     dispatch({
-        '/about': function(req, res, next){ ... },
+        '/about': function(req, res, next, queryParams){ ... },
         '/user': require('./user').urls
     })
 );
@@ -94,8 +94,8 @@ Its also possible to define methods for URLs:
 Connect.createServer(
     dispatch({
         '/user': {
-            'GET /item': function(req, res, next){ ... },
-            'POST /item': function(req, res, next){ ... },
+            'GET /item': function(req, res, next, queryParams){ ... },
+            'POST /item': function(req, res, next, queryParams){ ... },
         }
     })
 );
@@ -109,10 +109,10 @@ matching request methods, if you prefer:
 ```js
 dispatch({
     '/test': {
-        GET: function (req, res, next) {
+        GET: function (req, res, next, queryParams) {
             ...
         },
-        POST: function (req, res, next) {
+        POST: function (req, res, next, queryParams) {
             ...
         }
     }
@@ -139,11 +139,13 @@ var Connect = require('connect'),
 var server = Connect.createServer(
     quip(),
     dispatch({
-        '/': function(req, res, next){
-            res.text('hello world!');
+        '/': function(req, res, next, queryParams){
+            var who = queryParams.name || 'world';
+            res.text('hello ' + who + '!');
         },
-        '/api': function(req, res, next){
-            res.json({hello: 'world'});
+        '/api': function(req, res, next, queryParams){
+            var who = queryParams.name || 'world';
+            res.json({hello: who});
         }
     })
 );

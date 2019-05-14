@@ -285,6 +285,45 @@ exports['with named param at end'] = function (test) {
     })(request, 'response');
 };
 
+exports['with multiple named param at end'] = function (test) {
+    var request = {url: '/tests/123/456', method: 'GET'};
+    dispatch({
+        'GET /tests/:x/:y': function(req, res, x, y){
+            test.equals(req, request);
+            test.equals(res, 'response');
+            test.equals(x, '123');
+            test.equals(y, '456');
+            test.done();
+        }
+    })(request, 'response');
+};
+
+exports['with query param at end'] = function (test) {
+    var request = {url: '/tests?y=456', method: 'GET'};
+    dispatch({
+        'GET /tests': function(req, res, params){
+            test.equals(req, request);
+            test.equals(res, 'response');
+            test.equals(params.y, '456');
+            test.done();
+        }
+    })(request, 'response');
+};
+
+exports['with query and named params at end'] = function (test) {
+    var request = {url: '/tests/123/456?z=789', method: 'GET'};
+    dispatch({
+        'GET /tests/:x/:y': function(req, res, x, y, params){
+            test.equals(req, request);
+            test.equals(res, 'response');
+            test.equals(x, '123');
+            test.equals(y, '456');
+            test.equals(params.z, '789');
+            test.done();
+        }
+    })(request, 'response');
+};
+
 exports['regexp with pipe'] = function (test) {
     test.expect(2);
     var requestFactory = function(url){ return {url: url, method: 'GET'}; };
